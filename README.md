@@ -9,6 +9,32 @@ and source shown.
 > and its makers accept no responsibility or liability for decisions based on it. Check with a
 > qualified tax professional or the official tax authority before you file or pay.
 
+![Your tax estimate: what you may owe, with each tax shown as a 3D stack](docs/estimate.png)
+
+## Screenshots
+
+**1. Choose where you live.** Pick a continent, a country and, where it matters, a state and city.
+The globe turns to show where you are.
+
+![Start page with a country picker and a dotted globe](docs/start.png)
+
+**2. Add your statements.** Upload CSV, OFX or PDF statements, which are read in your browser, or
+connect a bank.
+
+![Import page with an upload area and a bank connection panel](docs/import.png)
+
+**3. Check the categories.** Fix anything that was categorised wrongly; changes can apply to
+every transaction from the same merchant.
+
+![Review page in the light theme, with totals and a transaction table](docs/review-light.png)
+
+**4. See the estimate.** Get each tax with its brackets, tax year and source, then download it as
+a CSV or print it.
+
+![Totals, effective and marginal rates, and the tax-by-tax table](docs/breakdown.png)
+
+<img src="docs/phone.png" alt="The estimate on a phone" width="300">
+
 ## Run it
 
 Needs Node 20 or later.
