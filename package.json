@@ -1,0 +1,16 @@
+{
+  "name": "levy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Levy — a private, in-browser personal tax estimator (US, UK, Canada, Australia).",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "samples": "node scripts/make-samples.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "pdfjs-dist": "4.10.38"
+  }
+}

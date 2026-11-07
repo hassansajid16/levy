@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Levy — personal tax estimator</title>
+  <meta name="description" content="Estimate what you owe from your own bank statements. Federal, state, local and social taxes for 33 countries, calculated privately in your browser.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#05070a">
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles.css">
+  <script src="/src/theme-init.js"></script>
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="appbar" id="appbar" hidden></header>
+  <div class="page">
+    <main id="main" tabindex="-1">
+      <noscript><p>Levy needs JavaScript to read your statements and calculate the estimate. Nothing is sent to a server.</p></noscript>
+    </main>
+    <footer class="footer" id="footer"></footer>
+  </div>
+  <dialog id="dialog"></dialog>
+  <div id="toast-root" aria-live="polite"></div>
+</body>
+</html>
