@@ -12,7 +12,8 @@ let current = null;
 let gating = false;
 
 function routeFromHash() {
-  const id = location.hash.replace(/^#\/?/, '') || 'start';
+  // A bank sending someone back from its own sign-in page lands on /oauth: finish on Import.
+  const id = location.pathname === '/oauth' ? 'statements' : location.hash.replace(/^#\/?/, '') || 'start';
   return STEPS.some((s) => s.id === id) ? id : 'start';
 }
 

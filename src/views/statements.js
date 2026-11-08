@@ -58,10 +58,15 @@ async function connectBank(rerender, dialog, fmt) {
     dialog.showModal();
   });
   if (!ok) return;
+  await runConnection(provider, c, rerender, () => provider.connect(ui.bank, { country: c.code }));
+}
+
+/** Connects (or finishes a bank's OAuth return), fetches the tax year and adds the transactions. */
+async function runConnection(provider, c, rerender, open) {
   try {
     ui.errors = [];
     ui.bankStep = 'connecting'; ui.bankProgress = 30; rerender();
-    const conn = await provider.connect(ui.bank, { country: c.code });
+    const conn = await open();
     if (!conn) { ui.bankStep = 'idle'; rerender(); return; }
     ui.bankStep = 'fetching'; ui.bankProgress = 70; rerender();
     const rows = await provider.fetchTransactions(conn, taxYearWindow(c.code));
@@ -69,6 +74,9 @@ async function connectBank(rerender, dialog, fmt) {
     ui.bankProgress = 100;
     const added = addTransactions({ id: sourceId(), name: `${conn.institutionName}${conn.accounts[0]?.mask ? ` ···${conn.accounts[0].mask}` : ''}`, kind: provider.kind === 'demo' ? 'Demo bank' : 'Bank', skipped: 0, demo: provider.kind === 'demo' }, rows);
     ui.bankStep = 'idle';
+    // Levy reads the year once, so the live connection is closed straight away: nothing is left
+    // with access to the account (and Plaid stops billing for it).
+    if (provider.kind !== 'demo') provider.disconnect(conn).catch(() => {});
     toast(`${conn.institutionName}: ${added} transactions added.`);
   } catch (err) {
     ui.bankStep = 'error'; ui.errors = [err.message];
@@ -84,6 +92,10 @@ export function renderStatements(main, go) {
   const provider = getProvider(c.code);
   const plaidElsewhere = provider.kind === 'demo' && bankStatus().provider === 'plaid';
   if (ui.country !== c.code) { resetStatementsUI(); ui.country = c.code; }
+  if (provider.hasOAuthReturn?.() && !ui.resuming) {
+    ui.resuming = true;
+    queueMicrotask(() => runConnection(provider, c, rerender, () => provider.resumeOAuth()));
+  }
   if (!ui.institutions) provider.listInstitutions(c.code).then((list) => { ui.institutions = list; ui.bank ||= list[0]?.id; rerender(); });
 
   const fileInput = h('input', { type: 'file', id: 'file', accept: ACCEPTED, multiple: true, class: 'visually-hidden', 'aria-describedby': 'file-hint',

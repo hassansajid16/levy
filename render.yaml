@@ -1,0 +1,21 @@
+# One-click hosting on Render: https://render.com/deploy?repo=https://github.com/hassansajid16/levy
+# Render asks for the values marked "sync: false" when you deploy; they never go in this repo.
+services:
+  - type: web
+    name: levy
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PLAID_ENV
+        value: sandbox
+      - key: PLAID_CLIENT_ID
+        sync: false
+      - key: PLAID_SECRET
+        sync: false
+      - key: PLAID_REDIRECT_URI
+        sync: false

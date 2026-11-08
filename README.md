@@ -111,16 +111,24 @@ Flinks...) can be added the same way.
 
 ### Hosting it for other people
 
-Out of the box Levy listens only on your own computer. To put it online, run it on any Node host
-(Render, Railway, Fly.io, a VPS) with `npm install` and `npm start`, and set these environment
-variables in the host's dashboard rather than in a file:
+Out of the box Levy listens only on your own computer. The quickest way to put it online is Render:
 
-- `HOST=0.0.0.0`, and `PORT` if the host doesn't set it
-- `PUBLIC_ORIGIN`: the HTTPS address people use, for example `https://levy.example.com`
-- `PLAID_CLIENT_ID`, `PLAID_SECRET`, `PLAID_ENV`, plus `PLAID_REDIRECT_URI` for OAuth banks
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/hassansajid16/levy)
 
-Real users' banks need `PLAID_ENV=production`, which Plaid grants after reviewing your app, and
-production use of bank data comes with Plaid's privacy and security requirements.
+`render.yaml` sets everything up. Render asks for `PLAID_CLIENT_ID` and `PLAID_SECRET`; leave
+`PLAID_REDIRECT_URI` blank until you need OAuth banks. Levy detects Render and Railway and picks
+up its public address itself. On other Node hosts (Fly.io, a VPS) run `npm ci` and `npm start`,
+and set `HOST=0.0.0.0` and `PUBLIC_ORIGIN=https://your-address`.
+
+- **OAuth banks** (most UK and EU banks, some US ones) send people to the bank's own site and back
+  to `https://your-address/oauth`. Add that address under Developers → API → Allowed redirect URIs
+  in the Plaid dashboard, and set the same value as `PLAID_REDIRECT_URI`.
+- **Real banks** need `PLAID_ENV=production` and a production secret, which Plaid gives you after
+  reviewing your app.
+- **After reading the tax year** Levy closes the Plaid connection, so it keeps no access to anyone's
+  account and Plaid stops counting it.
+- The free Render plan sleeps after 15 minutes without visitors, so the first visit after that
+  takes about a minute.
 
 ## Tax data
 

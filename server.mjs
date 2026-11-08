@@ -14,8 +14,11 @@ const envFile = join(root, '.env');
 if (existsSync(envFile)) loadDotEnv(readFileSync(envFile, 'utf8'));
 const port = Number(process.env.PORT) || 5173;
 // HOST=0.0.0.0 when hosting; PUBLIC_ORIGIN is the address people use (e.g. https://levy.example.com).
-const host = process.env.HOST || '127.0.0.1';
-const publicOrigin = (process.env.PUBLIC_ORIGIN || '').replace(/\/+$/, '');
+// Render and Railway are detected, so neither needs setting there.
+const hosted = Boolean(process.env.RENDER || process.env.RAILWAY_ENVIRONMENT);
+const host = process.env.HOST || (hosted ? '0.0.0.0' : '127.0.0.1');
+const publicOrigin = (process.env.PUBLIC_ORIGIN || process.env.RENDER_EXTERNAL_URL
+  || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : '')).replace(/\/+$/, '');
 const plaidCfg = plaidConfig();
 const plaid = plaidCfg ? createPlaid(plaidCfg) : null;
 
@@ -48,9 +51,11 @@ const security = {
   'Content-Security-Policy':
     "default-src 'self'; script-src 'self' https://cdn.plaid.com; frame-src https://cdn.plaid.com https://*.plaid.com; worker-src 'self' blob:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.plaid.com; frame-ancestors 'none'",
 };
+if (publicOrigin.startsWith('https://')) security['Strict-Transport-Security'] = 'max-age=31536000';
 
 function resolvePath(urlPath) {
-  if (urlPath === '/' || urlPath === '/index.html') return join(root, 'index.html');
+  // /oauth is where banks send people back after signing in on the bank's own site (Plaid OAuth).
+  if (urlPath === '/' || urlPath === '/index.html' || urlPath === '/oauth') return join(root, 'index.html');
   for (const [prefix, dir] of mounts) {
     if (urlPath.startsWith(prefix)) {
       const file = normalize(join(dir, urlPath.slice(prefix.length)));
