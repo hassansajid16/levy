@@ -107,9 +107,14 @@ export function createPlaid(cfg, { fetchImpl = fetch, wait = (ms) => new Promise
   };
 }
 
-/** Minimal .env reader (KEY=value lines, # comments). Existing environment variables win. */
+/**
+ * Minimal .env reader (KEY=value lines, # comments). Real environment variables win. Within the
+ * file, blank values are ignored and a later line overrides an earlier one, so keys pasted below
+ * the template's empty lines still work.
+ */
 export function loadDotEnv(text, env = process.env) {
-  for (const raw of text.split(/\r?\n/)) {
+  const fromFile = {};
+  for (const raw of text.replace(/^﻿/, '').split(/\r?\n/)) {
     const line = raw.trim();
     if (!line || line.startsWith('#')) continue;
     const i = line.indexOf('=');
@@ -117,7 +122,8 @@ export function loadDotEnv(text, env = process.env) {
     const key = line.slice(0, i).trim();
     let value = line.slice(i + 1).trim();
     if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) value = value.slice(1, -1);
-    if (!(key in env)) env[key] = value;
+    if (value) fromFile[key] = value;
   }
+  for (const [key, value] of Object.entries(fromFile)) if (!env[key]) env[key] = value;
   return env;
 }

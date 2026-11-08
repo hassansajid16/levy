@@ -68,6 +68,12 @@ describe('Plaid integration (server side)', () => {
     assert.deepEqual(env, { PLAID_ENV: 'production', PLAID_CLIENT_ID: 'abc', PLAID_SECRET: 's3cret' });
   });
 
+  test('keys pasted below the template\'s empty lines still count', () => {
+    const env = {};
+    loadDotEnv('PLAID_CLIENT_ID=\nPLAID_SECRET=\nPLAID_ENV=sandbox\n\nPLAID_CLIENT_ID=abc\nPLAID_SECRET=xyz\n', env);
+    assert.deepEqual(env, { PLAID_CLIENT_ID: 'abc', PLAID_SECRET: 'xyz', PLAID_ENV: 'sandbox' });
+  });
+
   test('covers the countries Plaid supports', () => {
     for (const c of ['US', 'CA', 'GB', 'IE', 'DE', 'FR', 'ES', 'NL']) assert.ok(PLAID_COUNTRIES.includes(c));
   });
