@@ -3,6 +3,11 @@
 // transactions by an opaque connection id. Access tokens live in this process's memory only and
 // are gone when the server stops.
 //
+// Levy runs Plaid in sandbox (test banks with generated data). Production access was requested in
+// November 2026, but Plaid doesn't offer it to individual developers: it needs a business contract
+// starting at about £2,000 a month. The production code path is kept and tested so a business
+// with a contract could switch PLAID_ENV to production; see "Why Plaid runs in sandbox" in the README.
+//
 // Configure with environment variables or a .env file next to server.mjs:
 //   PLAID_CLIENT_ID=...   PLAID_SECRET=...   PLAID_ENV=sandbox|production   PLAID_REDIRECT_URI=(optional)
 import { randomUUID } from 'node:crypto';

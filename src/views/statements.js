@@ -132,7 +132,7 @@ export function renderStatements(main, go) {
       : plaidElsewhere
         ? `Plaid doesn’t cover ${c.name}, so this is the demo connection with sample transactions.`
         : 'Add Plaid keys to the .env file to connect a real bank (see the README). Until then, this demo walks through the same steps with sample transactions.'),
-    provider.kind !== 'demo' && provider.env === 'sandbox' ? h('p', { class: 'notice', style: { marginBottom: '14px' } }, h('strong', null, 'Plaid sandbox. '), 'Pick any bank in Plaid’s window and sign in with Plaid’s test login: username user_good, password pass_good.') : null,
+    provider.kind !== 'demo' && provider.env === 'sandbox' ? h('p', { class: 'notice', style: { marginBottom: '14px' } }, h('strong', null, 'Test banks only. '), 'Plaid doesn’t give individual developers access to real banks, so this connects to Plaid’s sandbox. Pick any bank and sign in with Plaid’s test login: username user_good, password pass_good. To use your own account, upload a statement instead.') : null,
     provider.kind !== 'demo' ? null : h('fieldset', { disabled: connecting },
       h('legend', { class: 'visually-hidden' }, 'Bank'),
       h('ul', { class: 'bank-list' }, banks.map((b) => h('li', null, h('label', { class: 'bank-option' },

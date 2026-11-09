@@ -99,5 +99,5 @@ export function renderShell(active) {
     h('div', { class: 'meta' },
       h('span', { class: 'privacy' }, icons.lock(), 'Read on this device. Nothing uploaded.'),
       h('span', null, 'Rules for 33 countries · tax years 2025 and 2025–26'),
-      h('span', null, 'Bank connection: Plaid when configured, otherwise demo')));
+      h('span', null, 'Bank connection: Plaid sandbox (test banks only)')));
 }
